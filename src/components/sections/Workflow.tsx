@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Calendar, Clock, ArrowRight } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, MessageSquare } from 'lucide-react';
 
 const Workflow = () => {
   return (
