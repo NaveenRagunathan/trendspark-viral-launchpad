@@ -13,7 +13,7 @@ import {
   Card, 
   CardContent,
 } from "@/components/ui/card";
-import { Quote, Star, CircleUser, ChevronRight } from "lucide-react";
+import { Quote, Star, CircleUser } from "lucide-react";
 
 const testimonials = [
   {
@@ -56,7 +56,6 @@ const testimonials = [
 
 const Testimonials = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
   
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -76,6 +75,12 @@ const Testimonials = () => {
     };
   }, []);
 
+  const colors = [
+    'from-trendspark-mint to-trendspark-mint/30', 
+    'from-amber-500 to-amber-500/30', 
+    'from-purple-500 to-purple-500/30'
+  ];
+
   return (
     <section 
       id="testimonials" 
@@ -89,43 +94,40 @@ const Testimonials = () => {
       </div>
 
       <div className="container max-w-7xl mx-auto px-4 relative z-10">
-        {/* Section header */}
+        {/* Section header - Centered with gradient highlight */}
         <div 
           className={cn(
             "text-center max-w-3xl mx-auto mb-16 transition-all duration-700",
             isVisible ? "opacity-100 transform translate-y-0" : "opacity-0 transform translate-y-10"
           )}
         >
-          <h2 className="text-6xl md:text-7xl font-bold mb-6 text-white leading-tight">
+          <h2 className="text-6xl md:text-7xl font-bold mb-4 text-white">
             Success <span className="bg-gradient-to-r from-trendspark-mint to-trendspark-peach bg-clip-text text-transparent">Stories</span>
           </h2>
           <div className="h-1 w-24 bg-gradient-to-r from-trendspark-mint to-trendspark-peach mx-auto mb-6 rounded-full"></div>
-          <p className="text-gray-300 text-xl max-w-2xl mx-auto">
+          <p className="text-gray-300 text-xl">
             Join thousands of creators who've transformed their reach with TrendSpark
           </p>
         </div>
 
-        {/* Desktop view - Staggered layout */}
-        <div className="hidden lg:block">
-          <div className="relative grid grid-cols-3 gap-6 min-h-[500px]">
-            {testimonials.map((testimonial, index) => (
-              <div 
-                key={index}
-                className={cn(
-                  "transition-all duration-1000 transform",
-                  isVisible ? "opacity-100" : "opacity-0",
-                  index === 0 ? "translate-y-12" : index === 1 ? "translate-y-0" : "translate-y-24"
-                )}
-                style={{ transitionDelay: `${index * 200}ms` }}
-              >
-                <TestimonialCard testimonial={testimonial} index={index} />
-              </div>
-            ))}
-          </div>
+        {/* Testimonial cards - Horizontal layout for desktop */}
+        <div className="hidden lg:flex justify-center gap-6 mb-16">
+          {testimonials.map((testimonial, index) => (
+            <div 
+              key={index} 
+              className={cn(
+                "w-1/3 transition-all duration-1000 transform",
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10",
+              )}
+              style={{ transitionDelay: `${index * 200}ms` }}
+            >
+              <TestimonialCard testimonial={testimonial} color={colors[index % colors.length]} />
+            </div>
+          ))}
         </div>
 
-        {/* Tablet/Mobile view - Interactive carousel */}
-        <div className="lg:hidden">
+        {/* Mobile carousel */}
+        <div className="lg:hidden mb-16">
           <Carousel className="w-full">
             <CarouselContent>
               {testimonials.map((testimonial, index) => (
@@ -137,7 +139,7 @@ const Testimonials = () => {
                     )}
                     style={{ transitionDelay: `${index * 200}ms` }}
                   >
-                    <TestimonialCard testimonial={testimonial} index={index} />
+                    <TestimonialCard testimonial={testimonial} color={colors[index % colors.length]} />
                   </div>
                 </CarouselItem>
               ))}
@@ -147,15 +149,15 @@ const Testimonials = () => {
           </Carousel>
         </div>
 
-        {/* Social proof counter */}
+        {/* Social proof counter - Fixed at bottom of section */}
         <div 
           className={cn(
-            "mt-16 text-center transition-all duration-1000",
+            "flex justify-center transition-all duration-1000",
             isVisible ? "opacity-100 transform translate-y-0" : "opacity-0 transform translate-y-10"
           )}
           style={{ transitionDelay: "600ms" }}
         >
-          <div className="inline-flex items-center bg-white/5 backdrop-blur-sm border border-white/10 rounded-full py-2 px-6 space-x-8">
+          <div className="flex items-center justify-center gap-8 lg:gap-16 px-4 lg:px-8">
             <div className="flex flex-col items-center">
               <span className="text-3xl font-bold text-white">1,500+</span>
               <span className="text-xs text-gray-400">Creators</span>
@@ -180,15 +182,14 @@ const Testimonials = () => {
   );
 };
 
-const TestimonialCard = ({ testimonial, index }) => {
+// Extracted TestimonialCard component
+const TestimonialCard = ({ testimonial, color }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const accentColor = color.split(' ')[0].replace('from-', '');
   
   return (
     <Card 
-      className={cn(
-        "h-full relative rounded-2xl overflow-hidden transition-all duration-500",
-        "border-0 shadow-xl"
-      )}
+      className="h-full relative rounded-xl overflow-hidden transition-all duration-500 border-0 shadow-xl bg-transparent"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -197,84 +198,43 @@ const TestimonialCard = ({ testimonial, index }) => {
       
       {/* Animated border */}
       <div className={cn(
-        "absolute inset-0 rounded-2xl p-[1px] bg-gradient-to-br opacity-40 transition-opacity duration-500",
-        index === 0 ? "from-trendspark-mint to-trendspark-mint/30" : 
-        index === 1 ? "from-trendspark-peach to-trendspark-peach/30" : 
-        "from-purple-500 to-blue-500/30",
+        "absolute inset-0 rounded-xl p-[1px] bg-gradient-to-br opacity-40 transition-opacity duration-500",
+        color,
         isHovered ? "opacity-100" : "opacity-40"
       )}></div>
       
-      {/* Glow effect */}
-      <div className={cn(
-        "absolute -inset-0.5 rounded-2xl blur-sm transition-opacity duration-500",
-        index === 0 ? "bg-trendspark-mint/20" : 
-        index === 1 ? "bg-trendspark-peach/20" : 
-        "bg-purple-500/20",
-        isHovered ? "opacity-70" : "opacity-0"
-      )}></div>
-      
-      <CardContent className="relative z-10 p-8 h-full flex flex-col">
-        {/* Quote icon */}
-        <Quote 
-          className={cn(
-            "absolute top-6 right-6 w-12 h-12 transition-colors duration-500",
-            index === 0 ? "text-trendspark-mint/20" : 
-            index === 1 ? "text-trendspark-peach/20" : 
-            "text-purple-500/20"
-          )}
-        />
-        
-        {/* Rating */}
-        <div className="flex mb-5">
+      <CardContent className="relative z-10 p-6 h-full flex flex-col">
+        {/* Rating stars */}
+        <div className="flex mb-3">
           {Array(testimonial.rating).fill(null).map((_, i) => (
-            <Star 
-              key={i} 
-              className={cn(
-                "w-5 h-5 fill-current",
-                index === 0 ? "text-trendspark-mint" : 
-                index === 1 ? "text-trendspark-peach" : 
-                "text-purple-500"
-              )} 
-            />
+            <Star key={i} className={`w-4 h-4 fill-current text-${accentColor}`} />
           ))}
         </div>
         
+        {/* Quote icon */}
+        <Quote className={`absolute top-6 right-6 w-12 h-12 text-${accentColor}/20`} />
+        
         {/* Quote */}
-        <blockquote className="mb-8 flex-grow">
+        <blockquote className="mb-6 flex-grow">
           <p className="text-white text-lg leading-relaxed">{testimonial.quote}</p>
         </blockquote>
         
         {/* Author info */}
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <Avatar className={cn(
-              "h-14 w-14 border-2 transition-all duration-500 shadow-lg",
-              index === 0 ? "border-trendspark-mint" : 
-              index === 1 ? "border-trendspark-peach" : 
-              "border-purple-500",
-              isHovered ? "scale-110" : ""
-            )}>
-              <AvatarImage src={testimonial.avatar} alt={testimonial.author} className="object-cover" />
-              <AvatarFallback>
-                <CircleUser className="text-white" />
-              </AvatarFallback>
-            </Avatar>
-            <div className={cn(
-              "absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-500",
-              index === 0 ? "bg-trendspark-mint" : 
-              index === 1 ? "bg-trendspark-peach" : 
-              "bg-purple-500",
-              isHovered ? "scale-110" : ""
-            )}>
-              <ChevronRight className="w-4 h-4 text-black" />
-            </div>
-          </div>
+        <div className="flex items-center gap-4 mb-5">
+          <Avatar className={cn(
+            "h-12 w-12 border-2 transition-all duration-500 shadow-lg",
+            `border-${accentColor}`,
+            isHovered ? "scale-110" : ""
+          )}>
+            <AvatarImage src={testimonial.avatar} alt={testimonial.author} className="object-cover" />
+            <AvatarFallback>
+              <CircleUser className="text-white" />
+            </AvatarFallback>
+          </Avatar>
           <div>
             <h3 className={cn(
               "font-bold text-lg transition-colors duration-500",
-              index === 0 ? "text-trendspark-mint" : 
-              index === 1 ? "text-trendspark-peach" : 
-              "text-purple-500"
+              `text-${accentColor}`
             )}>
               {testimonial.author}
             </h3>
@@ -284,18 +244,13 @@ const TestimonialCard = ({ testimonial, index }) => {
         
         {/* Stats display */}
         <div className={cn(
-          "grid grid-cols-3 gap-3 mt-6 pt-6 border-t transition-all duration-500",
-          index === 0 ? "border-trendspark-mint/20" : 
-          index === 1 ? "border-trendspark-peach/20" : 
-          "border-purple-500/20",
-          isHovered ? "opacity-100" : "opacity-80"
+          "grid grid-cols-3 gap-3 pt-4 border-t transition-all duration-500",
+          `border-${accentColor}/20`,
         )}>
           <div className="text-center">
             <p className={cn(
               "text-xl font-bold",
-              index === 0 ? "text-trendspark-mint" : 
-              index === 1 ? "text-trendspark-peach" : 
-              "text-purple-500"
+              `text-${accentColor}`
             )}>
               {testimonial.stats.followers}
             </p>
