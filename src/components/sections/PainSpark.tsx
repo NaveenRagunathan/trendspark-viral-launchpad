@@ -1,28 +1,34 @@
 
 import React from 'react';
-import { X, ArrowRight } from 'lucide-react';
+import { X, ArrowRight, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const PainSpark = () => {
   return (
     <div className="section-padding bg-trendspark-black relative">
+      {/* Background effects */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-[20%] right-[5%] w-[300px] h-[300px] bg-trendspark-mint/5 rounded-full blur-[100px]"></div>
+        <div className="absolute bottom-[10%] left-[5%] w-[250px] h-[250px] bg-trendspark-peach/5 rounded-full blur-[80px]"></div>
+      </div>
+
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Left Column - Pain Points */}
           <div className="space-y-6">
             <h2 className="text-3xl md:text-4xl font-bold mb-8">
-              Struggling to breakthrough <br />while others go viral?
+              Tired of Posting Into the Void?
             </h2>
             
             <div className="space-y-6">
               {[
                 {
-                  emoji: '🤨',
+                  emoji: '😩',
                   title: 'Great content, ZERO traction',
                   description: 'Your best work gets buried while mediocre posts from others somehow take off'
                 },
                 {
-                  emoji: '👀',
+                  emoji: '📉',
                   title: 'Others winning with easy content',
                   description: 'Some creators post basic content and yet get 100K+ views consistently'
                 },
@@ -49,21 +55,21 @@ const PainSpark = () => {
             style={{ animationDelay: '300ms' }}
           >
             <div className="absolute -bottom-10 -right-10 w-[300px] h-[300px] bg-trendspark-mint/10 rounded-full blur-[80px] -z-10"></div>
-            <div className="card-gradient rounded-xl p-6 md:p-8 relative overflow-hidden">
+            <div className="card-gradient rounded-xl p-6 md:p-8 relative overflow-hidden hover:shadow-[0_0_22px_rgba(255,184,107,0.3)] transition-all">
               <div className="absolute top-0 right-0 -mt-4 -mr-4">
                 <div className="w-24 h-24 bg-trendspark-peach/30 rounded-full blur-[30px]"></div>
               </div>
               
               <div className="flex items-center gap-3 mb-6">
                 <div className="bg-trendspark-peach/20 w-12 h-12 rounded-full flex items-center justify-center text-trendspark-peach text-2xl">
-                  ✨
+                  <Sparkles className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold">The Viral Spark</h3>
               </div>
               
               <p className="text-lg mb-6 text-white">
                 Here's the secret: It's not about luck—
-                <span className="underline decoration-trendspark-mint decoration-2 underline-offset-4 font-medium ml-1">
+                <span className="bg-gradient-to-r from-trendspark-mint to-trendspark-pink bg-clip-text text-transparent font-medium ml-1">
                   it's about timing.
                 </span>
               </p>
@@ -106,7 +112,7 @@ const PainPoint = ({ emoji, title, description, index }: {
   return (
     <div 
       className={cn(
-        "bg-trendspark-elevated rounded-lg p-5 border border-red-500/20 relative opacity-0",
+        "bg-trendspark-elevated rounded-lg p-5 border border-red-500/20 relative opacity-0 hover:scale-[1.02] transition-all",
         index === 0 ? "animate-fade-in" : "animate-slide-in-left"
       )}
       style={{ 
@@ -115,7 +121,7 @@ const PainPoint = ({ emoji, title, description, index }: {
       }}
     >
       <div className="flex items-start gap-4">
-        <div className="min-w-[40px] h-10 flex items-center justify-center rounded-full border border-red-500/30 text-xl">
+        <div className="min-w-[40px] h-10 flex items-center justify-center rounded-full border border-red-500/30 text-xl hover:scale-105 transition-transform">
           {emoji}
         </div>
         <div>

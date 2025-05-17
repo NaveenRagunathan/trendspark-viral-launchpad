@@ -11,14 +11,17 @@ const Hero = () => {
   
   return (
     <div className="min-h-screen grid grid-pattern relative pt-28 pb-20 px-6 md:px-12 lg:px-24">
+      {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-b from-trendspark-black/0 via-trendspark-mint/3 to-trendspark-black/0 pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-trendspark-mint/5 rounded-full blur-[120px] opacity-30 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-trendspark-peach/5 rounded-full blur-[100px] opacity-30 pointer-events-none" />
       
       <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center">
         {/* Left Column: Text & CTA */}
         <div className="space-y-8">
           <div className="space-y-4">
             {isVisible && (
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight">
                 <AnimatedText text="Go Viral Without Guessing." delay={100} />
               </h1>
             )}
@@ -29,12 +32,12 @@ const Hero = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 pt-4 opacity-0 animate-fade-in-delay">
-            <button className="neon-button flex items-center justify-center gap-2 animate-bounce-subtle">
+            <button className="neon-button flex items-center justify-center gap-2 animate-bounce-subtle hover:scale-[1.02] transition-all">
               Get My Viral Hook
               <ArrowRight className="w-5 h-5" />
             </button>
             <button className="ghost-button flex items-center justify-center gap-2">
-              See Examples
+              Try It Free
             </button>
           </div>
           
@@ -112,7 +115,7 @@ const TrendCard = ({ topic, growth, hook, delay, isActive }: {
       style={{ 
         opacity: 0,
         animation: 'fade-in 0.5s ease-out forwards',
-        animationDelay: `${delay}ms`
+        animationDelay: `${delay}ms` 
       }}
     >
       <div className="flex justify-between items-center mb-2">
