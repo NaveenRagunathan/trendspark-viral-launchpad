@@ -61,7 +61,7 @@ const PainSpark = () => {
                 {
                   emoji: '⏰',
                   title: 'Algorithms Feel Like a Mystery',
-                  description: 'No matter how consistent your posting schedule, you can't predict which content will perform'
+                  description: 'No matter how consistent your posting schedule, you can\'t predict which content will perform'
                 }
               ].map((point, i) => (
                 <PainPoint 
