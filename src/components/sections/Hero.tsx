@@ -10,7 +10,7 @@ const Hero = () => {
   }, []);
   
   return (
-    <section className="min-h-screen grid grid-pattern relative pt-28 pb-20 px-6 md:px-12 lg:px-24">
+    <div className="min-h-screen grid grid-pattern relative pt-28 pb-20 px-6 md:px-12 lg:px-24">
       <div className="absolute inset-0 bg-gradient-to-b from-trendspark-black/0 via-trendspark-mint/3 to-trendspark-black/0 pointer-events-none" />
       
       <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center">
@@ -69,7 +69,7 @@ const Hero = () => {
               {/* Trend Cards */}
               <div className="space-y-4">
                 {[
-                  { topic: 'AI diet plans', growth: '+325%', hook: 'I tried ChatGPT's meal plan for a week...' },
+                  { topic: 'AI diet plans', growth: '+325%', hook: 'I tried ChatGPT\'s meal plan for a week...' },
                   { topic: 'Financial minimalism', growth: '+215%', hook: '3 expenses you can cut today for passive income' },
                   { topic: 'Phone-free mornings', growth: '+187%', hook: 'My phone-free morning routine tripled my productivity' }
                 ].map((trend, i) => (
@@ -93,7 +93,7 @@ const Hero = () => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
@@ -110,7 +110,6 @@ const TrendCard = ({ topic, growth, hook, delay, isActive }: {
         isActive ? 'border-trendspark-mint/30' : ''
       }`}
       style={{ 
-        animationDelay: `${delay}ms`,
         opacity: 0,
         animation: 'fade-in 0.5s ease-out forwards',
         animationDelay: `${delay}ms`

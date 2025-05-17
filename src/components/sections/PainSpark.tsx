@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 
 const PainSpark = () => {
   return (
-    <section className="section-padding bg-trendspark-black relative">
+    <div className="section-padding bg-trendspark-black relative">
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Left Column - Pain Points */}
@@ -93,7 +93,7 @@ const PainSpark = () => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
