@@ -1,22 +1,51 @@
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { Calendar, Clock, ArrowRight, MessageSquare } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const Workflow = () => {
+  const [isInView, setIsInView] = useState(false);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+    
+    const section = document.getElementById('workflow');
+    if (section) observer.observe(section);
+    
+    return () => {
+      if (section) observer.unobserve(section);
+    };
+  }, []);
+  
   return (
     <section id="workflow" className="section-padding bg-trendspark-black relative">
+      {/* Background patterns */}
       <div className="absolute inset-0 grid-pattern opacity-[0.03] pointer-events-none"></div>
       
+      {/* Top gradient line */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-trendspark-mint/20 to-transparent"></div>
+      
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+        <div className={cn(
+          "text-center mb-16 opacity-0",
+          isInView && "animate-fade-in"
+        )}>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight tracking-tight">
             Your Daily Viral Content Workflow
           </h2>
-          <p className="text-trendspark-text-secondary max-w-2xl mx-auto text-lg">
+          <p className="text-trendspark-text-secondary max-w-2xl mx-auto text-xl">
             From trend detection to viral posting in three simple steps
           </p>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-10">
           {workflowSteps.map((step, index) => (
             <WorkflowStep 
               key={index}
@@ -26,12 +55,18 @@ const Workflow = () => {
               icon={step.icon}
               visual={step.visual}
               index={index}
+              isInView={isInView}
             />
           ))}
         </div>
         
-        <div className="mt-16 text-center">
-          <button className="neon-button inline-flex items-center gap-2">
+        <div className={cn(
+          "mt-16 text-center opacity-0",
+          isInView && "animate-fade-in"
+        )}
+          style={{ animationDelay: '1200ms' }}
+        >
+          <button className="neon-button inline-flex items-center gap-2 text-lg px-10 py-4 rounded-lg hover:scale-105 transition-transform">
             Start Your Workflow
             <ArrowRight className="w-5 h-5" />
           </button>
@@ -117,36 +152,44 @@ const workflowSteps = [
   }
 ];
 
-const WorkflowStep = ({ number, title, description, icon: Icon, visual, index }: {
+const WorkflowStep = ({ number, title, description, icon: Icon, visual, index, isInView }: {
   number: number;
   title: string;
   description: string;
   icon: React.ComponentType<{ className?: string }>;
   visual: React.ReactNode;
   index: number;
+  isInView: boolean;
 }) => {
   return (
     <div 
-      className="relative perspective-card opacity-0 animate-fade-in"
-      style={{ animationDelay: `${index * 200}ms` }}
+      className={cn(
+        "relative perspective-card opacity-0",
+        isInView && "animate-fade-in"
+      )}
+      style={{ animationDelay: `${800 + index * 200}ms` }}
     >
       {/* Step Number */}
-      <div className="absolute -top-6 -left-2">
-        <div className="w-12 h-12 rounded-full flex items-center justify-center bg-trendspark-elevated border border-trendspark-mint/30 text-xl font-bold">
+      <div className="absolute -top-6 -left-2 z-10">
+        <div className="w-14 h-14 rounded-full flex items-center justify-center bg-trendspark-elevated border border-trendspark-mint/30 text-2xl font-bold shadow-lg shadow-trendspark-mint/10">
           {number}
         </div>
       </div>
       
-      <div className="card-gradient rounded-xl p-6 pt-8">
+      <div className="card-gradient rounded-xl p-8 pt-10 border border-white/5 hover:border-trendspark-mint/20 transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)]">
         <div className="mb-6">
-          <div className="flex items-center gap-3 mb-3">
-            <Icon className="w-5 h-5 text-trendspark-mint" />
-            <h3 className="text-xl font-bold">{title}</h3>
+          <div className="flex items-center gap-3 mb-4">
+            <Icon className="w-6 h-6 text-trendspark-mint" />
+            <h3 className="text-2xl font-bold">{title}</h3>
           </div>
-          <p className="text-trendspark-text-secondary">{description}</p>
+          <p className="text-trendspark-text-secondary text-lg">{description}</p>
         </div>
         
-        <div className="mt-6 transition-transform hover:translate-y-[-5px] duration-300">
+        <div className="mt-8 transition-transform hover:translate-y-[-5px] duration-500 relative">
+          {/* Overlay glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-t from-trendspark-mint/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+          
+          {/* Content */}
           {visual}
         </div>
       </div>
