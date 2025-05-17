@@ -35,12 +35,12 @@ const PainSpark = () => {
                 {
                   emoji: '⏰',
                   title: 'Content strategy feels random',
-                  description: 'You're posting regularly but can't predict which posts will actually perform'
+                  description: "You're posting regularly but can't predict which posts will actually perform"
                 }
               ].map((point, i) => (
                 <PainPoint 
-                  key={i} 
-                  emoji={point.emoji} 
+                  key={i}
+                  emoji={point.emoji}
                   title={point.title}
                   description={point.description}
                   index={i}
