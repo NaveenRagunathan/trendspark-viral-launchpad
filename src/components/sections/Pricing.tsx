@@ -1,11 +1,17 @@
 
 import React, { useState } from 'react';
-import { Check, ArrowRight } from 'lucide-react';
+import { Check, Badge, BadgeDollarSign, BadgePlus, BadgeCheck, Rocket, LifeBuoy, HardDrive, CompareArrows } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
+import { Progress } from '@/components/ui/progress';
+import { Card, CardContent } from '@/components/ui/card';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 
 interface PlanFeature {
   text: string;
   included: boolean;
+  icon?: React.ReactNode;
 }
 
 interface Plan {
@@ -19,6 +25,8 @@ interface Plan {
   cta: string;
   popular?: boolean;
   badge?: string;
+  icon: React.ReactNode;
+  stageNumber: number;
 }
 
 const plans: Plan[] = [
@@ -30,16 +38,18 @@ const plans: Plan[] = [
       yearly: "$0"
     },
     features: [
-      { text: "Daily trend digest (12hr delay)", included: true },
-      { text: "5 AI hook suggestions per week", included: true },
-      { text: "Basic trend analytics", included: true },
+      { text: "Daily trend digest (12hr delay)", included: true, icon: <LifeBuoy size={16} /> },
+      { text: "5 AI hook suggestions per week", included: true, icon: <BadgePlus size={16} /> },
+      { text: "Basic trend analytics", included: true, icon: <HardDrive size={16} /> },
       { text: "Real-time trend alerts", included: false },
       { text: "Custom hook generation", included: false },
       { text: "Post performance predictions", included: false },
       { text: "Content calendar integration", included: false }
     ],
-    cta: "Get Started",
-    badge: "Free"
+    cta: "Start Free",
+    badge: "Starter",
+    icon: <BadgePlus className="w-6 h-6" />,
+    stageNumber: 1
   },
   {
     name: "Creator",
@@ -49,17 +59,19 @@ const plans: Plan[] = [
       yearly: "$19"
     },
     features: [
-      { text: "Real-time trend alerts", included: true },
-      { text: "Unlimited AI hook generation", included: true },
-      { text: "Post timing optimizer", included: true },
-      { text: "Platform-specific formatting", included: true },
-      { text: "Niche audience insights", included: true },
+      { text: "Real-time trend alerts", included: true, icon: <LifeBuoy size={16} /> },
+      { text: "Unlimited AI hook generation", included: true, icon: <BadgePlus size={16} /> },
+      { text: "Post timing optimizer", included: true, icon: <CompareArrows size={16} /> },
+      { text: "Platform-specific formatting", included: true, icon: <HardDrive size={16} /> },
+      { text: "Niche audience insights", included: true, icon: <BadgeCheck size={16} /> },
       { text: "Post performance predictions", included: false },
       { text: "Content calendar integration", included: false }
     ],
     cta: "Start 7-Day Trial",
     popular: true,
-    badge: "Popular"
+    badge: "Popular",
+    icon: <BadgeDollarSign className="w-6 h-6" />,
+    stageNumber: 2
   },
   {
     name: "Pro",
@@ -69,31 +81,44 @@ const plans: Plan[] = [
       yearly: "$59"
     },
     features: [
-      { text: "Everything in Creator plan", included: true },
-      { text: "Post performance predictions", included: true },
-      { text: "Content calendar integration", included: true },
-      { text: "API access for custom workflows", included: true },
-      { text: "Early trend access (72hr advantage)", included: true },
-      { text: "Dedicated trend analyst", included: true },
-      { text: "Competitor trend monitoring", included: true }
+      { text: "Everything in Creator plan", included: true, icon: <BadgeCheck size={16} /> },
+      { text: "Post performance predictions", included: true, icon: <CompareArrows size={16} /> },
+      { text: "Content calendar integration", included: true, icon: <HardDrive size={16} /> },
+      { text: "API access for custom workflows", included: true, icon: <BadgeCheck size={16} /> },
+      { text: "Early trend access (72hr advantage)", included: true, icon: <LifeBuoy size={16} /> },
+      { text: "Dedicated trend analyst", included: true, icon: <BadgeCheck size={16} /> },
+      { text: "Competitor trend monitoring", included: true, icon: <Rocket size={16} /> }
     ],
     cta: "Get Pro Access",
-    badge: "Pro"
+    badge: "Pro",
+    icon: <Rocket className="w-6 h-6" />,
+    stageNumber: 3
   }
 ];
 
 const Pricing = () => {
   const [annually, setAnnually] = useState(true);
+  const [expandedPlanIndex, setExpandedPlanIndex] = useState<number | null>(null);
+  const [hoveredPlan, setHoveredPlan] = useState<number | null>(null);
+  
+  const handleCompareClick = () => {
+    // Scroll to full comparison table or open modal
+    console.log("Compare plans clicked");
+  };
   
   return (
-    <section id="pricing" className="section-padding bg-trendspark-black relative">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-            Choose Your Plan
+    <section id="pricing" className="section-padding bg-trendspark-black relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0 grid-pattern opacity-10"></div>
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-trendspark-black via-trendspark-black/95 to-trendspark-black"></div>
+      
+      <div className="max-w-7xl mx-auto relative">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-gradient">
+            Journey Pricing Map
           </h2>
           <p className="text-trendspark-text-secondary max-w-2xl mx-auto text-lg">
-            Start with a 7-day free trial. No credit card required.
+            Choose your path to success with our flexible plans
           </p>
           
           {/* Pricing Toggle */}
@@ -103,11 +128,10 @@ const Pricing = () => {
               className="w-14 h-7 bg-trendspark-elevated rounded-full p-1 relative"
               onClick={() => setAnnually(!annually)}
             >
-              <span 
-                className={cn(
-                  "block w-5 h-5 rounded-full bg-trendspark-mint transition-all",
-                  annually ? "translate-x-7" : ""
-                )}
+              <motion.span 
+                className="block w-5 h-5 rounded-full bg-trendspark-mint"
+                animate={{ x: annually ? 28 : 0 }}
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
               />
             </button>
             <span className={annually ? "text-white" : "text-trendspark-text-secondary"}>
@@ -115,92 +139,237 @@ const Pricing = () => {
             </span>
           </div>
         </div>
-        
-        <div className="grid md:grid-cols-3 gap-8">
-          {plans.map((plan, index) => (
-            <PricingCard 
-              key={index}
-              plan={plan}
-              annually={annually}
-              index={index}
-            />
-          ))}
+
+        {/* Compare Plans Button */}
+        <div className="flex justify-center mb-8">
+          <button 
+            onClick={handleCompareClick}
+            className="flex items-center gap-2 bg-trendspark-elevated border border-trendspark-mint/30 text-white px-6 py-2 rounded-full hover:bg-trendspark-mint/10 transition-all"
+          >
+            <CompareArrows className="w-4 h-4" />
+            <span>Compare All Plans</span>
+          </button>
         </div>
+        
+        {/* Pricing Journey Map */}
+        <div className="relative mb-16">
+          {/* Progress Path */}
+          <div className="hidden md:block absolute top-24 left-0 right-0 h-1 bg-gradient-to-r from-trendspark-elevated via-trendspark-mint/30 to-trendspark-mint/60">
+            <Progress value={100} className="h-full bg-transparent" />
+          </div>
+          
+          <div className="flex flex-col md:flex-row justify-between items-center relative">
+            {plans.map((plan, index) => (
+              <PricingStage
+                key={index}
+                plan={plan}
+                annually={annually}
+                index={index}
+                isExpanded={expandedPlanIndex === index}
+                isHovered={hoveredPlan === index}
+                onHover={(isHovered) => setHoveredPlan(isHovered ? index : null)}
+                onExpand={() => setExpandedPlanIndex(index === expandedPlanIndex ? null : index)}
+                totalStages={plans.length}
+              />
+            ))}
+          </div>
+        </div>
+        
+        {/* Final CTA */}
+        <motion.div 
+          className="text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5 }}
+        >
+          <button className="neon-button flex items-center gap-2 mx-auto px-8 py-4 text-lg font-bold">
+            <span>Start Your Journey</span>
+            <Rocket className="w-5 h-5" />
+          </button>
+        </motion.div>
       </div>
     </section>
   );
 };
 
-const PricingCard = ({ plan, annually, index }: {
-  plan: Plan;
-  annually: boolean;
-  index: number;
+const PricingStage = ({ 
+  plan, 
+  annually, 
+  index, 
+  isExpanded, 
+  isHovered, 
+  onHover, 
+  onExpand,
+  totalStages 
+}: { 
+  plan: Plan; 
+  annually: boolean; 
+  index: number; 
+  isExpanded: boolean;
+  isHovered: boolean;
+  onHover: (isHovered: boolean) => void;
+  onExpand: () => void;
+  totalStages: number;
 }) => {
   return (
-    <div 
+    <motion.div 
       className={cn(
-        "card-gradient rounded-xl p-6 transition-all relative",
-        plan.popular ? "border-trendspark-mint/30 md:scale-105 md:-translate-y-2" : "",
-        "opacity-0 animate-fade-in"
+        "w-full md:w-1/3 p-4 relative",
+        index === 0 ? "md:text-left" : index === totalStages-1 ? "md:text-right" : "md:text-center"
       )}
-      style={{ animationDelay: `${index * 200}ms` }}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.2 }}
     >
-      {/* Plan Badge */}
-      {plan.badge && (
-        <div className="absolute -top-3 -right-3">
-          <div className={cn(
-            "text-xs font-bold px-3 py-1 rounded-full",
-            plan.popular ? "bg-trendspark-mint text-trendspark-black" : 
-                          "bg-trendspark-elevated text-trendspark-text-secondary"
-          )}>
-            {plan.badge}
-          </div>
-        </div>
-      )}
-      
-      {/* Plan Header */}
-      <div className="mb-6">
-        <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-        <p className="text-trendspark-text-secondary text-sm mb-4">{plan.description}</p>
-        <div className="flex items-baseline">
-          <span className="text-4xl font-bold">
-            {annually ? plan.price.yearly : plan.price.monthly}
-          </span>
-          <span className="text-trendspark-text-secondary ml-2">
-            /month
-          </span>
-        </div>
-      </div>
-      
-      {/* Features List */}
-      <div className="space-y-3 mb-8">
-        {plan.features.map((feature, i) => (
-          <div key={i} className="flex items-center gap-3">
-            <div className={cn(
-              "w-5 h-5 rounded-full flex items-center justify-center",
-              feature.included ? "bg-trendspark-mint/20 text-trendspark-mint" : "bg-trendspark-elevated text-trendspark-text-secondary"
-            )}>
-              <Check className="w-3 h-3" />
-            </div>
-            <span className={feature.included ? "text-white" : "text-trendspark-text-secondary"}>
-              {feature.text}
-            </span>
-          </div>
-        ))}
-      </div>
-      
-      {/* CTA Button */}
-      <button 
-        className={cn(
-          "w-full py-3 rounded-md transition-all flex items-center justify-center gap-2",
-          plan.popular ? "neon-button" : "ghost-button"
-        )}
+      {/* Stage Marker */}
+      <div
+        className="relative mx-auto md:mx-0 md:ml-auto md:mr-auto"
+        style={{ 
+          margin: index === 0 ? "0 auto 0 0" : 
+                  index === totalStages - 1 ? "0 0 0 auto" : 
+                  "0 auto" 
+        }}
       >
-        <span>{plan.cta}</span>
-        <ArrowRight className="w-4 h-4" />
-      </button>
-    </div>
+        <HoverCard openDelay={200} closeDelay={100}>
+          <HoverCardTrigger asChild>
+            <motion.button
+              className={cn(
+                "w-16 h-16 rounded-full flex items-center justify-center",
+                "border-2 border-trendspark-mint relative z-10",
+                isHovered || isExpanded ? "bg-trendspark-mint text-trendspark-black" : 
+                "bg-trendspark-elevated text-trendspark-mint"
+              )}
+              onClick={onExpand}
+              onMouseEnter={() => onHover(true)}
+              onMouseLeave={() => onHover(false)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <motion.span 
+                className="absolute -inset-2 rounded-full bg-trendspark-mint/20"
+                animate={{ scale: isHovered || isExpanded ? [1, 1.1, 1] : 1 }}
+                transition={{ repeat: isHovered || isExpanded ? Infinity : 0, duration: 1.5 }}
+              />
+              <span className="text-sm font-bold">{plan.stageNumber}</span>
+            </motion.button>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-60 p-0 bg-trendspark-elevated border border-trendspark-mint/30">
+            <div className="p-4">
+              <div className="flex items-center gap-2">
+                {plan.icon}
+                <h4 className="text-lg font-bold text-white">{plan.name}</h4>
+                {plan.badge && (
+                  <span className={cn(
+                    "text-xs font-bold px-2 py-0.5 rounded-full",
+                    plan.popular ? "bg-trendspark-mint text-trendspark-black" : 
+                                "bg-trendspark-elevated/70 text-trendspark-mint border border-trendspark-mint/40"
+                  )}>
+                    {plan.badge}
+                  </span>
+                )}
+              </div>
+              <p className="text-trendspark-text-secondary text-sm mt-1">{plan.description}</p>
+              <div className="mt-2 font-bold text-xl text-white">
+                {annually ? plan.price.yearly : plan.price.monthly}
+                <span className="text-trendspark-text-secondary text-sm ml-1">/mo</span>
+              </div>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+      </div>
+      
+      {/* Plan Name */}
+      <motion.h3 
+        className={cn(
+          "text-xl font-bold mt-4 mx-auto md:mx-0",
+          isHovered || isExpanded ? "text-trendspark-mint" : "text-white",
+          index === 0 ? "md:text-left" : index === totalStages-1 ? "md:text-right" : "md:text-center"
+        )}
+        animate={{ 
+          scale: isHovered || isExpanded ? [1, 1.05, 1] : 1 
+        }}
+        transition={{ duration: 0.5 }}
+        style={{ 
+          maxWidth: "80%",
+          margin: index === 0 ? "1rem auto 1rem 0" : 
+                  index === totalStages - 1 ? "1rem 0 1rem auto" : 
+                  "1rem auto" 
+        }}
+      >
+        {plan.name}
+      </motion.h3>
+      
+      {/* Expanded Card */}
+      <Popover open={isExpanded}>
+        <PopoverContent 
+          className="w-80 p-0 bg-trendspark-elevated border border-trendspark-mint/30"
+          align={index === 0 ? "start" : index === totalStages-1 ? "end" : "center"}
+        >
+          <Card className="bg-transparent border-0 shadow-none">
+            <CardContent className="pt-6 px-6">
+              {/* Price */}
+              <div className="mb-4">
+                <div className="flex items-baseline">
+                  <span className="text-3xl font-bold text-white">
+                    {annually ? plan.price.yearly : plan.price.monthly}
+                  </span>
+                  <span className="text-trendspark-text-secondary ml-2">
+                    /month
+                  </span>
+                </div>
+                <p className="text-sm text-trendspark-text-secondary mt-1">
+                  {plan.description}
+                </p>
+              </div>
+              
+              {/* Features */}
+              <div className="space-y-2 my-6">
+                {plan.features.map((feature, i) => (
+                  <motion.div 
+                    key={i} 
+                    className="flex items-center gap-3"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                  >
+                    <div className={cn(
+                      "w-5 h-5 rounded-full flex items-center justify-center",
+                      feature.included ? "bg-trendspark-mint/20 text-trendspark-mint" : 
+                                        "bg-trendspark-elevated text-trendspark-text-secondary"
+                    )}>
+                      <Check className="w-3 h-3" />
+                    </div>
+                    <div className="flex items-center gap-1">
+                      {feature.icon && feature.included && (
+                        <span className="text-trendspark-mint">{feature.icon}</span>
+                      )}
+                      <span className={feature.included ? "text-white" : "text-trendspark-text-secondary"}>
+                        {feature.text}
+                      </span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+              
+              {/* CTA Button */}
+              <button 
+                className={cn(
+                  "w-full py-3 rounded-md transition-all flex items-center justify-center gap-2",
+                  plan.popular ? "neon-button" : "ghost-button"
+                )}
+              >
+                <span>{plan.cta}</span>
+                <Rocket className="w-4 h-4" />
+              </button>
+            </CardContent>
+          </Card>
+        </PopoverContent>
+      </Popover>
+    </motion.div>
   );
 };
 
 export default Pricing;
+
