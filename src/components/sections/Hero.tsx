@@ -2,7 +2,73 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 
-const Hero = () => {
+interface TrendCardProps {
+  topic: string;
+  growth: string;
+  hook: string;
+  delay: number;
+  isActive: boolean;
+}
+
+interface AnimatedTextProps {
+  text: string;
+  delay: number;
+}
+
+const TrendCard: React.FC<TrendCardProps> = ({ topic, growth, hook, delay, isActive }) => {
+  return (
+    <div 
+      className={`card-gradient rounded-lg p-4 transition-all hover-highlight ${isActive ? 'border-trendspark-mint/30' : ''}`}
+      style={{ 
+        opacity: 0,
+        animation: 'fade-in 0.5s ease-out forwards',
+        animationDelay: `${delay}ms` 
+      }}
+    >
+      <div className="flex justify-between items-center mb-2">
+        <h4 className="font-medium text-white">{topic}</h4>
+        <span className="text-green-400 text-sm">{growth}</span>
+      </div>
+      <div className="bg-trendspark-elevated/50 rounded p-2 mb-2">
+        <p className="text-sm text-white">{hook}</p>
+      </div>
+      <div className="flex justify-between items-center">
+        <div className="flex space-x-2">
+          <span className="text-xs bg-trendspark-elevated px-2 py-1 rounded">#ai</span>
+          <span className="text-xs bg-trendspark-elevated px-2 py-1 rounded">#productivity</span>
+        </div>
+        <button className="text-xs bg-trendspark-mint/20 hover:bg-trendspark-mint/30 text-trendspark-mint px-3 py-1 rounded transition-colors">
+          Copy Hook
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const AnimatedText: React.FC<AnimatedTextProps> = ({ text, delay }) => {
+  return (
+    <div className="inline">
+      {text.split(' ').map((word, wordIndex) => (
+        <span key={wordIndex} className="inline-block mr-[0.25em]">
+          {word.split('').map((char, charIndex) => (
+            <span
+              key={charIndex}
+              className="inline-block opacity-0 animate-fade-in"
+              style={{ 
+                animationDelay: `${delay + ((wordIndex * 3 + charIndex) * 50)}ms`,
+                animationFillMode: 'forwards' 
+              }}
+            >
+              {char}
+            </span>
+          ))}
+        </span>
+      ))}
+    </div>
+  );
+};
+
+const Hero: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   
   useEffect(() => {
@@ -100,65 +166,11 @@ const Hero = () => {
   );
 };
 
-const TrendCard = ({ topic, growth, hook, delay, isActive }: { 
-  topic: string; 
-  growth: string; 
-  hook: string;
-  delay: number;
-  isActive: boolean;
-}) => {
-  return (
-    <div 
-      className={`card-gradient rounded-lg p-4 transition-all hover-highlight ${
-        isActive ? 'border-trendspark-mint/30' : ''
-      }`}
-      style={{ 
-        opacity: 0,
-        animation: 'fade-in 0.5s ease-out forwards',
-        animationDelay: `${delay}ms` 
-      }}
-    >
-      <div className="flex justify-between items-center mb-2">
-        <h4 className="font-medium text-white">{topic}</h4>
-        <span className="text-green-400 text-sm">{growth}</span>
-      </div>
-      <div className="bg-trendspark-elevated/50 rounded p-2 mb-2">
-        <p className="text-sm text-white">{hook}</p>
-      </div>
-      <div className="flex justify-between items-center">
-        <div className="flex space-x-2">
-          <span className="text-xs bg-trendspark-elevated px-2 py-1 rounded">#ai</span>
-          <span className="text-xs bg-trendspark-elevated px-2 py-1 rounded">#productivity</span>
-        </div>
-        <button className="text-xs bg-trendspark-mint/20 hover:bg-trendspark-mint/30 text-trendspark-mint px-3 py-1 rounded transition-colors">
-          Copy Hook
-        </button>
-      </div>
-    </div>
-  );
-};
 
-const AnimatedText = ({ text, delay }: { text: string; delay: number }) => {
-  return (
-    <div className="inline">
-      {text.split(' ').map((word, wordIndex) => (
-        <span key={wordIndex} className="inline-block mr-[0.25em]">
-          {word.split('').map((char, charIndex) => (
-            <span
-              key={charIndex}
-              className="inline-block opacity-0 animate-fade-in"
-              style={{ 
-                animationDelay: `${delay + ((wordIndex * 3 + charIndex) * 50)}ms`,
-                animationFillMode: 'forwards' 
-              }}
-            >
-              {char}
-            </span>
-          ))}
-        </span>
-      ))}
-    </div>
-  );
-};
+
+
+
+
+
 
 export default Hero;

@@ -1,6 +1,6 @@
 
-import React, { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
+import React, { useEffect, useState } from 'react';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -40,7 +40,7 @@ const Navbar = () => {
         </div>
         
         <div>
-          <button className="ghost-button hover:text-trendspark-black">
+          <button className="ghost-button hover:text-white">
             Sign In
           </button>
         </div>

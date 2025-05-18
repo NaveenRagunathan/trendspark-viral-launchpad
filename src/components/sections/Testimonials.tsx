@@ -15,6 +15,26 @@ import {
 } from "@/components/ui/card";
 import { Quote, Star, CircleUser } from "lucide-react";
 
+interface TestimonialStats {
+  followers: string;
+  growth: string;
+  timeframe: string;
+}
+
+interface Testimonial {
+  quote: string;
+  author: string;
+  role: string;
+  avatar: string;
+  rating: number;
+  stats: TestimonialStats;
+}
+
+interface TestimonialCardProps {
+  testimonial: Testimonial;
+  color: string;
+}
+
 const testimonials = [
   {
     quote: "I went from 1K to 47K followers in 8 weeks by using TrendSpark's trend alerts. The early access to emerging topics made all the difference.",
@@ -183,7 +203,7 @@ const Testimonials = () => {
 };
 
 // Extracted TestimonialCard component
-const TestimonialCard = ({ testimonial, color }) => {
+const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial, color }) => {
   const [isHovered, setIsHovered] = useState(false);
   const accentColor = color.split(' ')[0].replace('from-', '');
   

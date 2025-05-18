@@ -10,6 +10,20 @@ export default {
 		"./src/**/*.{ts,tsx}",
 	],
 	prefix: "",
+  safelist: [
+    'text-trendspark-mint',
+    'text-amber-500',
+    'text-purple-500',
+    'border-trendspark-mint',
+    'border-amber-500',
+    'border-purple-500',
+    'border-trendspark-mint/20',
+    'border-amber-500/20',
+    'border-purple-500/20',
+    // For Star component fill classes, if text-* doesn't cover it directly for SVGs
+    // It's often better to rely on text-color and fill:currentColor, but safelisting is an option
+    // Example: 'fill-trendspark-mint', 'fill-amber-500', 'fill-purple-500'
+  ],
 	theme: {
 		container: {
 			center: true,
@@ -148,5 +162,5 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [import("tailwindcss-animate")],
 } satisfies Config;

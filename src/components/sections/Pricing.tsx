@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Check, Badge, BadgeDollarSign, BadgePlus, BadgeCheck, Rocket, LifeBuoy, HardDrive, CompareArrows } from 'lucide-react';
+import { Check, Badge, BadgeDollarSign, BadgePlus, BadgeCheck, Rocket, LifeBuoy, HardDrive, ArrowLeftRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Progress } from '@/components/ui/progress';
@@ -61,7 +61,7 @@ const plans: Plan[] = [
     features: [
       { text: "Real-time trend alerts", included: true, icon: <LifeBuoy size={16} /> },
       { text: "Unlimited AI hook generation", included: true, icon: <BadgePlus size={16} /> },
-      { text: "Post timing optimizer", included: true, icon: <CompareArrows size={16} /> },
+      { text: "Post timing optimizer", included: true, icon: <ArrowLeftRight size={16} /> },
       { text: "Platform-specific formatting", included: true, icon: <HardDrive size={16} /> },
       { text: "Niche audience insights", included: true, icon: <BadgeCheck size={16} /> },
       { text: "Post performance predictions", included: false },
@@ -82,7 +82,7 @@ const plans: Plan[] = [
     },
     features: [
       { text: "Everything in Creator plan", included: true, icon: <BadgeCheck size={16} /> },
-      { text: "Post performance predictions", included: true, icon: <CompareArrows size={16} /> },
+      { text: "Post performance predictions", included: true, icon: <ArrowLeftRight size={16} /> },
       { text: "Content calendar integration", included: true, icon: <HardDrive size={16} /> },
       { text: "API access for custom workflows", included: true, icon: <BadgeCheck size={16} /> },
       { text: "Early trend access (72hr advantage)", included: true, icon: <LifeBuoy size={16} /> },
@@ -95,6 +95,8 @@ const plans: Plan[] = [
     stageNumber: 3
   }
 ];
+
+import { AnimatePresence } from 'framer-motion';
 
 const Pricing = () => {
   const [annually, setAnnually] = useState(true);
@@ -146,7 +148,7 @@ const Pricing = () => {
             onClick={handleCompareClick}
             className="flex items-center gap-2 bg-trendspark-elevated border border-trendspark-mint/30 text-white px-6 py-2 rounded-full hover:bg-trendspark-mint/10 transition-all"
           >
-            <CompareArrows className="w-4 h-4" />
+            <ArrowLeftRight className="w-4 h-4" />
             <span>Compare All Plans</span>
           </button>
         </div>
@@ -232,52 +234,26 @@ const PricingStage = ({
                   "0 auto" 
         }}
       >
-        <HoverCard openDelay={200} closeDelay={100}>
-          <HoverCardTrigger asChild>
-            <motion.button
-              className={cn(
-                "w-16 h-16 rounded-full flex items-center justify-center",
-                "border-2 border-trendspark-mint relative z-10",
-                isHovered || isExpanded ? "bg-trendspark-mint text-trendspark-black" : 
-                "bg-trendspark-elevated text-trendspark-mint"
-              )}
-              onClick={onExpand}
-              onMouseEnter={() => onHover(true)}
-              onMouseLeave={() => onHover(false)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <motion.span 
-                className="absolute -inset-2 rounded-full bg-trendspark-mint/20"
-                animate={{ scale: isHovered || isExpanded ? [1, 1.1, 1] : 1 }}
-                transition={{ repeat: isHovered || isExpanded ? Infinity : 0, duration: 1.5 }}
-              />
-              <span className="text-sm font-bold">{plan.stageNumber}</span>
-            </motion.button>
-          </HoverCardTrigger>
-          <HoverCardContent className="w-60 p-0 bg-trendspark-elevated border border-trendspark-mint/30">
-            <div className="p-4">
-              <div className="flex items-center gap-2">
-                {plan.icon}
-                <h4 className="text-lg font-bold text-white">{plan.name}</h4>
-                {plan.badge && (
-                  <span className={cn(
-                    "text-xs font-bold px-2 py-0.5 rounded-full",
-                    plan.popular ? "bg-trendspark-mint text-trendspark-black" : 
-                                "bg-trendspark-elevated/70 text-trendspark-mint border border-trendspark-mint/40"
-                  )}>
-                    {plan.badge}
-                  </span>
-                )}
-              </div>
-              <p className="text-trendspark-text-secondary text-sm mt-1">{plan.description}</p>
-              <div className="mt-2 font-bold text-xl text-white">
-                {annually ? plan.price.yearly : plan.price.monthly}
-                <span className="text-trendspark-text-secondary text-sm ml-1">/mo</span>
-              </div>
-            </div>
-          </HoverCardContent>
-        </HoverCard>
+        <motion.button
+          className={cn(
+            "w-16 h-16 rounded-full flex items-center justify-center",
+            "border-2 border-trendspark-mint relative z-10",
+            isHovered || isExpanded ? "bg-trendspark-mint text-trendspark-black" : 
+            "bg-trendspark-elevated text-trendspark-mint"
+          )}
+          onClick={onExpand}
+          onMouseEnter={() => onHover(true)}
+          onMouseLeave={() => onHover(false)}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <motion.span 
+            className="absolute -inset-2 rounded-full bg-trendspark-mint/20"
+            animate={{ scale: isHovered || isExpanded ? [1, 1.1, 1] : 1 }}
+            transition={{ repeat: isHovered || isExpanded ? Infinity : 0, duration: 1.5 }}
+          />
+          <span className="text-sm font-bold">{plan.stageNumber}</span>
+        </motion.button>
       </div>
       
       {/* Plan Name */}
@@ -300,6 +276,72 @@ const PricingStage = ({
       >
         {plan.name}
       </motion.h3>
+      
+      {/* Price */}
+      <motion.div 
+        className={cn(
+          "text-lg font-bold mt-2 mx-auto md:mx-0",
+          isHovered || isExpanded ? "text-trendspark-mint" : "text-white",
+          index === 0 ? "md:text-left" : index === totalStages-1 ? "md:text-right" : "md:text-center"
+        )}
+        animate={{ 
+          scale: isHovered || isExpanded ? [1, 1.05, 1] : 1 
+        }}
+        transition={{ duration: 0.5 }}
+        style={{ 
+          maxWidth: "80%",
+          margin: index === 0 ? "1rem auto 1rem 0" : 
+                  index === totalStages - 1 ? "1rem 0 1rem auto" : 
+                  "1rem auto" 
+        }}
+      >
+        {annually ? plan.price.yearly : plan.price.monthly}
+        <span className="text-trendspark-text-secondary text-sm ml-1">/mo</span>
+      </motion.div>
+      
+      {/* Top Features */}
+      <motion.div 
+        className={cn(
+          "mt-4 mx-auto md:mx-0",
+          index === 0 ? "md:text-left" : index === totalStages-1 ? "md:text-right" : "md:text-center"
+        )}
+        animate={{ 
+          scale: isHovered || isExpanded ? [1, 1.05, 1] : 1 
+        }}
+        transition={{ duration: 0.5 }}
+        style={{ 
+          maxWidth: "80%",
+          margin: index === 0 ? "1rem auto 1rem 0" : 
+                  index === totalStages - 1 ? "1rem 0 1rem auto" : 
+                  "1rem auto" 
+        }}
+      >
+        {plan.features.slice(0, 3).map((feature, i) => (
+          <motion.div 
+            key={i} 
+            className="flex items-center gap-3"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.1 }}
+          >
+            <div className={cn(
+              "w-5 h-5 rounded-full flex items-center justify-center",
+              feature.included ? "bg-trendspark-mint/20 text-trendspark-mint" : 
+                                  "bg-trendspark-elevated text-trendspark-text-secondary"
+            )}>
+              <Check className="w-3 h-3" />
+            </div>
+            <div className="flex items-center gap-1">
+              {feature.icon && feature.included && (
+                <span className="text-trendspark-mint">{feature.icon}</span>
+              )}
+              <span className={feature.included ? "text-white" : "text-trendspark-text-secondary"}>
+                {feature.text}
+              </span>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
       
       {/* Expanded Card */}
       <Popover open={isExpanded}>
